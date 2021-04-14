@@ -1,4 +1,4 @@
-import { badRequest, serverError } from '../../../helpers/http/http-helpers'
+import { badRequest, serverError, noContent } from '../../../helpers/http/http-helpers'
 import { Controller, HttpRequest, HttpResponse, Validation, AddGuide } from './add-guides-controller-protocols'
 export class AddGuideController implements Controller {
   constructor (
@@ -24,6 +24,8 @@ export class AddGuideController implements Controller {
         openOnWeekends,
         address
       })
+
+      return noContent()
     } catch (error) {
       return serverError(error)
     }
