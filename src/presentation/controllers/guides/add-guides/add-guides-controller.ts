@@ -1,7 +1,10 @@
 import { badRequest } from '../../../helpers/http/http-helpers'
-import { Controller, HttpRequest, HttpResponse, Validation } from './add-guides-controller-protocols'
+import { Controller, HttpRequest, HttpResponse, Validation, AddGuide } from './add-guides-controller-protocols'
 export class AddGuideController implements Controller {
-  constructor (private readonly validation: Validation) {}
+  constructor (
+    private readonly validation: Validation,
+    private readonly addGuide: AddGuide
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     const error = this.validation.validate(httpRequest.body)
@@ -9,5 +12,16 @@ export class AddGuideController implements Controller {
     if (error) {
       return badRequest(error)
     }
+
+    const { name, latitude, longitude, about, instruction, openOnWeekends, address } = httpRequest.body
+    await this.addGuide.add({
+      name,
+      latitude,
+      longitude,
+      about,
+      instruction,
+      openOnWeekends,
+      address
+    })
   }
 }
