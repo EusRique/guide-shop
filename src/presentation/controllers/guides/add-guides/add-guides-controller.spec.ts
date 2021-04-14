@@ -1,6 +1,6 @@
 import { HttpRequest, Validation, AddGuide, AddGuideModel } from './add-guides-controller-protocols'
 import { AddGuideController } from './add-guides-controller'
-import { badRequest, serverError } from '../../../helpers/http/http-helpers'
+import { badRequest, serverError, noContent } from '../../../helpers/http/http-helpers'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -80,5 +80,11 @@ describe('AddGuide Controller', () => {
     jest.spyOn(addGuideStub, 'add').mockResolvedValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(noContent())
   })
 })
